@@ -2,7 +2,7 @@ function fcm_comcoh2beam(comcohfile,wfile)
 % FCM_COMCOH2BEAM  checks your current FCM configuration and creates output 
 %  beam file from functional connectivity values.  
 %
-%    fcm_comcoh2beam(comcohfile,¦wfile¦)
+%    fcm_comcoh2beam(comcohfile,ï¿½wfileï¿½)
 %
 %  COMCOHFILE  name of file containing functional connectivity results.
 %  WFILE       (optional) File containing the spatial filter matrix W. If
@@ -29,7 +29,7 @@ switch fuse.connection
             case 'All'
                 meanfun = 'fcm_comcohA2meanbeam';
                 Lfun    = 'fcm_comcohA2Lbeam';
-            case {'Selected' 'Selected+Contralateral'}
+            case {'Selected' 'Selected+Contralateral' 'Contralateral'}
                 meanfun = 'fcm_comcohS2meanbeam';
                 if ~isempty(strmatch('L',fuse.output,'exact')) && ~strcmpi(fuse.seed,'Selected+Contralateral')
                     warning('fcm:noLimage','L-images can only be computed with seed voxels set to ''All'' or ''Selected+Contralateral''');
@@ -90,7 +90,7 @@ if ~isempty(wfile) && ~strcmpi(fuse.seed,'Extracerebral') && any(strcmp(fuse.fun
     CC=fcm_correctspatialleakage(CC,W); clear W
     [pa,fi,dum]=fileparts(comcohfile);
     comcohfile = fullfile(pa,[fi 'C']);
-    save(comcohfile,'CC'), clear CC
+    save(comcohfile,'CC','-v7.3'), clear CC
     produceoutput(meanfun,Lfun,comcohfile)
 end
     

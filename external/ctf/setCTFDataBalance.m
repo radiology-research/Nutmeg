@@ -288,11 +288,13 @@ if ~isempty(chanList)
   kBad=reindex(chanList,intersect(chanList,kBad));
 end
 for k=kBad
-  if strcmp(prec,'single')
-    data(:,k,:)=single(zeros(size(data,1),1,size(data,3)));
-  else
-    data(:,k,:)=zeros(size(data,1),1,size(data,3));
-  end
+    if isempty(kBad)~=1
+        if strcmp(prec,'single')
+            data(:,k,:)=single(zeros(size(data,1),1,size(data,3)));
+        else
+            data(:,k,:)=zeros(size(data,1),1,size(data,3));
+        end
+    end
 end
 clear k Gorder MEGorder;
 

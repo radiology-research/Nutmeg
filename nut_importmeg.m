@@ -203,7 +203,7 @@ end
 if ~isempty(gcbf)  %will be empty during batching
     handles = guihandles(gcbf);
     if isfield(handles,'nut_megfile') && isfield(nuts.meg,'filename')
-        set(handles.nut_megfile,'String',nuts.meg.filename);
+        set(handles.nut_megfile,'Text',nuts.meg.filename);
     end
 end
 
