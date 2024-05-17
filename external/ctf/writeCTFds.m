@@ -182,7 +182,7 @@ clear ksep kdot;
 %  Save the name already in structure ds, and change to the new datset name.
 if isfield(ds,'baseName')
   olddatasetname=[ds.baseName,'.ds'];
-  if isfield(ds.path)
+  if isfield(ds,'path') && ~isempty(ds.path)
     olddatasetname=[ds.path,olddatasetname];
   end
 else
@@ -211,8 +211,8 @@ end
 %  Sensor type indices : SQUIDs (0:7), ADCs (10), DACs(14), Clock (17), HLC (13,28,29)
 %  See Document CTF MEG File Formats (PN 900-0088), RES4 File Format/
 for index=[0:7 10 13 14 17 28 29]
-  for k=find([ds.res4.senres.sensorTypeIndex]==index);
-    if isempty(strfind(ds.res4.chanNames(k,:),'-'))
+  for k=find([ds.res4.senres.sensorTypeIndex]==index)
+    if ~contains(ds.res4.chanNames(k,:),'-')
       fprintf(['writeCTFds: Channel %3d  %s     No sensor-file identification.',...
           ' (''-xxxx'' appended to channel name).\n',...
           '\t\tSome CTF software may not work with these channel names.\n'],...
@@ -220,7 +220,11 @@ for index=[0:7 10 13 14 17 28 29]
       break;
     end
   end
-  if isempty(strfind(ds.res4.chanNames(k,:),'-'));break;end
+  if isempty(k) 
+            break;
+  elseif ~contains(ds.res4.chanNames(k,:),'-')
+      break;
+  end
 end
 clear index k chanName;
 

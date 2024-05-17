@@ -1,6 +1,6 @@
 function new_DSSP_CTF(foldername, filename,subjectnumber)
 
-Still need to add in the change on line 144 for WriteCTF
+%Still need to add in the change on line 144 for WriteCTF
 
 %addpath('/data/research_meg11/ccai/DSSP_Champ_ctf/ctf_fieldtrip');
 %addpath('/data/research_meg11/ccai/DSSP_Champ_ctf/DSSP_new');
@@ -9,7 +9,7 @@ Still need to add in the change on line 144 for WriteCTF
 %addpath(genpath('/data/research_meg10/ccai/ccai/public_data/fieldtrip/fieldtrip-20160222'));
 
 folder = pwd;
-pattern = '*session*';
+pattern = 'session_*.mat';
 sessionfiles = dir(fullfile(folder, pattern));
 pattern2='C*_*_*';
 files2 = dir(fullfile(folder, pattern2));
@@ -27,7 +27,7 @@ for dsnumber = 1:length(sessionfiles)
     
     
     % read .ds file
-    ds = readCTFds(foldername)
+    ds = readCTFds(foldername);;;
     
     % get MEG channel index
     chan=cellstr(ds.res4.chanNames);
@@ -144,7 +144,7 @@ for dsnumber = 1:length(sessionfiles)
     subplot(2,1,2);plot(dat_out(:,32:end,1));title('after DSSP');
     %
     
-    curpath = pwd;
+    % curpath = pwd;
     % cd(folder);
     % save([name,'_dssp_Nee',num2str(Nee)],'dat_in','dat_out','-v7.3');
     % cd(curpath);
