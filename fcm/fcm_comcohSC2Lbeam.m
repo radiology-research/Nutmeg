@@ -97,8 +97,12 @@ beam=struct('s',{{T}},'timewindow',timewin, ...
 beam.sinfo={'T'};
 beam.ttest.tail='both';
 beam.ttest.T=T;
-beam.ttest.p_uncorr = p;
-beam.ttest.FDR = 0.01;    
+beam.ttestFDR.T=T;
+beam.ttestFDR.p_uncorr = p;
+beam.ttestFDR.FDR=0.1;
+beam.ttestFDR.tail='both';
+
+[dum,beam.ttestFDR.cutoff]=nut_FDR(p,[],beam.ttestFDR.FDR);
 
 if isspec
     beam.labels.xaxis = 'Frequency (Hz)';
@@ -112,3 +116,4 @@ else
         beam.labels.yaxis = 'T';
     end
 end
+save s_beamtf_Limage beam

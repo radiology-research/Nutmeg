@@ -15,7 +15,10 @@ function nuts=fcm_selvoxidx(VOIvoxels)
 global nuts
 
 if nargin<1 
-    if ~isfield(nuts,'VOIvoxels')
+    if exist('tumorvoxels.mat','file')
+        load tumorvoxels.mat
+        nuts.VOIvoxels=VOIvoxels
+    elseif ~isfield(nuts,'VOIvoxels')
         VOIvoxels=fcm_selectvoxels(nuts);
     else
         VOIvoxels=nuts.VOIvoxels;
