@@ -121,7 +121,7 @@ for dsnumber = 1:length(sessionfiles)
     
     %
     name = ds.baseName;
-    ds_temp=writeCTFds(strcat(fullfile(folder,name),'_Dssp','_mu',num2str(mu),'_Nee',num2str(Nee),'_new.ds'),ds,dat_out,'fT');
+    ds_temp=writeCTFds(strcat(folder,,name,'_Dssp','_mu',num2str(mu),'_Nee',num2str(Nee),'_new.ds'),ds,dat_out,'fT');
     
     % cd ctf_code/
     % writeCTFds(strcat(folder,name,'_Dssp','_mu',num2str(mu),'_Nee',num2str(Nee),'_2012.ds'),ds,dat_out,'fT');
