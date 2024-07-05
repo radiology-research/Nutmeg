@@ -86,7 +86,6 @@ function ds=writeCTFds(datasetname,ds,data,unit);
 
 persistent printWarning bandwidthMessage
 delim=filesep;
-
 if nargin==0 & nargout==0  %  Print a version number
   fprintf(['\twriteCTFds: Version 1.3   5 October 2007   ',...
       'Creates v4.1 and v4.2 CTF data sets.\n',...
@@ -388,7 +387,7 @@ while pt<ndata
   else
     meg4Ext=['.',int2str(floor(pt/maxPtsPerFile)),'_meg4'];
   end
-  fidMeg4=fopen([path,baseName,'.ds\',baseName,meg4Ext],'w','ieee-be');
+  fidMeg4=fopen([path,baseName,'.ds',delim,baseName,meg4Ext],'w','ieee-be');
   fwrite(fidMeg4,[ds.meg4.header(1:7),char(0)],'uint8');
   while pt<endPt
     pt1=min(pt+meg4ChunkSize,endPt);                   %  Convert to double in case data is
@@ -432,8 +431,8 @@ ds=updateBandwidth(ds,fhp,flp);
 ds=updateDateTime(ds);
 
 %  Create the .res4 file in the output dataset.
-ds.res4=writeRes4([path,baseName,'.ds\',baseName,'.res4'],ds.res4,MAX_COILS);
 
+ds.res4=writeRes4([path,baseName,'.ds',delim,baseName,'.res4'],ds.res4,MAX_COILS);
 if ds.res4.numcoef<0
   fprintf('\nwriteCTFds: writeRes4 returned ds.res4.numcoef=%d (<0??)\n\n',...
     ds.res4.numcoef);
@@ -444,16 +443,20 @@ if ds.res4.numcoef<0
 end
 
 %  Create .hist file
-histfile=[path,baseName,'.ds\',baseName,'.hist'];
+if strcmp(os,'PCWIN64')
+    histfile=[path,baseName,'.ds\',baseName,'.hist'];
+else
+    histfile=[path,baseName,'.ds/',baseName,'.hist'];
+end
 fid=fopen(histfile,'w');
 fwrite(fid,ds.hist,'char');
 fclose(fid);
 
 % New .newds file
 if isfield(ds,'newds')
-  fid=fopen([path,baseName,'.ds\',baseName,'.newds'],'w');
-  fwrite(fid,ds.newds,'char');
-  fclose(fid);
+    fid=fopen([path,baseName,'.ds',delim,baseName,'.newds'],'w');
+    fwrite(fid,ds.newds,'char');
+    fclose(fid);
 end
 
 %  New infods file.
