@@ -443,11 +443,7 @@ if ds.res4.numcoef<0
 end
 
 %  Create .hist file
-if strcmp(os,'PCWIN64')
-    histfile=[path,baseName,'.ds\',baseName,'.hist'];
-else
-    histfile=[path,baseName,'.ds/',baseName,'.hist'];
-end
+histfile=[path,baseName,'.ds',delim,baseName,'.hist'];
 fid=fopen(histfile,'w');
 fwrite(fid,ds.hist,'char');
 fclose(fid);
