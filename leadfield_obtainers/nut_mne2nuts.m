@@ -132,13 +132,21 @@ else   % assign labels based on left/right position
 
     leftchans = find(nuts.meg.sensorCoord(:,2) >= 0);
     rightchans = find(nuts.meg.sensorCoord(:,2) < 0);
+%     for i = 1:length(leftchans)
+%         channel_string = int2str(i);
+%         nuts.meg.sensor_labels{leftchans(i)} = ['L' '0'*ones(1,4-length(channel_string)) channel_string ' (' data.grad.label{leftchans(i)} ')'];
+%     end
+%     for i = 1:length(rightchans)
+%         channel_string = int2str(i);
+%         nuts.meg.sensor_labels{rightchans(i)} = ['R' '0'*ones(1,4-length(channel_string)) channel_string ' (' data.grad.label{rightchans(i)} ')'];
+%     end
     for i = 1:length(leftchans)
         channel_string = int2str(i);
-        nuts.meg.sensor_labels{leftchans(i)} = ['L' '0'*ones(1,4-length(channel_string)) channel_string ' (' data.grad.label{leftchans(i)} ')'];
+        nuts.meg.sensor_labels{leftchans(i)} = ['L' '0'*ones(1,4-length(channel_string)) channel_string ' (' nuts.meg.sensor_labels{leftchans(i)} ')'];
     end
     for i = 1:length(rightchans)
         channel_string = int2str(i);
-        nuts.meg.sensor_labels{rightchans(i)} = ['R' '0'*ones(1,4-length(channel_string)) channel_string ' (' data.grad.label{rightchans(i)} ')'];
+        nuts.meg.sensor_labels{rightchans(i)} = ['R' '0'*ones(1,4-length(channel_string)) channel_string ' (' nuts.meg.sensor_labels{rightchans(i)} ')'];
     end
 end
 

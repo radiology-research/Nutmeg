@@ -14,9 +14,7 @@ function Ainv=nut_pinv(A);
 [u,s] = svd(A);
 tol = sum(diag(s)) * 1e-12;
 
-%if(rank(A,tol)<size(A,1))
-rankLp=nut_rank(A);
-if rankLp<size(A,1)
+if(rank(A,tol)<size(A,1))
     Ainv = pinv(A,tol);
 else
     Ainv = inv(A);

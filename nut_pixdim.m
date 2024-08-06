@@ -8,4 +8,7 @@ if(strcmp(spm('ver'),'SPM2'))
 elseif(strcmp(spm('ver'),'SPM8') || strcmp(spm('ver'),'SPM8b'))
 %    ndim=vol.private.hdr.dim(2:4);
     pixdim=vol.private.hdr.pixdim(2:4);
+elseif(strcmp(spm('ver'),'SPM12') || strcmp(spm('ver'),'SPM12b'))
+%    ndim=vol.private.hdr.dim(2:4);
+    pixdim=vol.private.hdr.pixdim(2:4);
 end

@@ -71,6 +71,14 @@ if(strcmp(spm('ver'),'SPM8b') || strcmp(spm('ver'),'SPM8'))
 elseif(strcmp(spm('ver'),'SPM2'))
     iyimg=fullfile(path,['iy_' name(2:end) ext]);
     iyimg = [repmat(iyimg,3,1) [',1';',2';',3']];
+elseif(strcmp(spm('ver'),'SPM12'))
+    iyimg=fullfile(path,['y_' name(2:end) '.nii']); % ext might be '.img', but y_i* file will always be *.nii if dealing with SPM8
+    if(exist(iyimg,'file'))
+        iyimg = [repmat(iyimg,3,1) [',1,1';',1,2';',1,3']];
+        else
+        iyimg=fullfile(path,['iy_' name(2:end) ext]);
+        iyimg = [repmat(iyimg,3,1) [',1';',2';',3']];
+    end
 else
     errordlg(['NUTMEG is not compatible with ' spm('ver') '. Please place SPM2 or SPM8 in your path, which may be downloaded from http://www.fil.ion.ucl.ac.uk/spm'])
     return

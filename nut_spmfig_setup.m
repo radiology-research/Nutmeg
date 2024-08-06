@@ -23,7 +23,7 @@ inlabel = findobj('String','Intensity:','HorizontalAlignment','center');
 delete(findobj('String','Crosshair Position'));
 delete(findobj('ToolTipString','move crosshairs to origin'));
 delete(inlabel);
-set(st.in,'Visible','off');
+%set(st.in,'Visible','off');
 
 beaminlabel = uicontrol(fg,'Style','Text','Position',[60 350 120 020].*WS,'String','Activation Intensity:');
 st.beamin = uicontrol(fg,'Style','edit', 'Position',[175 350  85 020].*WS,'String','');
@@ -34,9 +34,10 @@ st.mnilabel=uicontrol('Style','text','BackgroundColor',[1 1 1],'Units','normaliz
 
 uicontrol(fg,'Style','Text', 'Position',[75 315 35 020].*WS,'String','MEG:');
 st.megp = uicontrol(fg,'Style','edit', 'Position',[110 315 135 020].*WS,'String',sprintf('%.1f %.1f %.1f',nut_mri2meg(spm_orthviews('pos')')),'Callback','nut_image(''setposmeg'')','ToolTipString','move crosshairs to MEG mm coordinates');
-
-set(st.mp,'Callback','spm_image(''setposmm''); nut_image(''shopos'');');
-set(st.vp,'Callback','spm_image(''setposvx''); nut_image(''shopos'');');
+%st.mp=[]
+%st.vp=[]
+%set(st.mp,'Callback','spm_image(''setposmm''); nut_image(''shopos'');');
+%set(st.vp,'Callback','spm_image(''setposvx''); nut_image(''shopos'');');
 
 %add sliders for scrolling through MRI
 if ndefaults.sliders
@@ -74,7 +75,7 @@ if(strcmp(spm('ver'),'SPM2'))
         SPM_axes_ButtonDownFcn = [get(SPM_axes_obj(1),'ButtonDownFcn') 'nut_image(''shopos'');'];
         set(SPM_axes_obj,'ButtonDownFcn',SPM_axes_ButtonDownFcn);
     end
-elseif(strcmp(spm('ver'),'SPM8b') || strcmp(spm('ver'),'SPM8'))
+elseif(strcmp(spm('ver'),'SPM8b') || strcmp(spm('ver'),'SPM8') || strcmp(spm('ver'),'SPM12'))
     nut_image_handle = @nut_image;
     tmp = get(SPM_axes_obj(1),'ButtonDownFcn');
     if(isa(tmp,'function_handle')) % this happens only with raw SPM8 ButtonDownFcn
@@ -86,10 +87,10 @@ end
 
 [dum,mrifile,dum]=fileparts(coreg.mripath);
 if( isfield(coreg,'norm_mripath') || strcmp(mrifile(1),'w') || strcmp(mrifile,'T1') || strncmp(mrifile,'avg',3) )
-%     load('ihb_DataBase.cdb','-mat'); % load MNI labels
-%     rivets.MNIdb = MNIdb;
-%     [meshx,meshy,meshz]=ndgrid(MNIdb.minX:MNIdb.voxX:MNIdb.maxX,MNIdb.minY:MNIdb.voxY:MNIdb.maxY,MNIdb.minZ:MNIdb.voxZ:MNIdb.maxZ);
-%     rivets.MNIdb.coords = [meshx(:) meshy(:) meshz(:)];
+    load('ihb_DataBase.cdb','-mat'); % load MNI labels
+    rivets.MNIdb = MNIdb;
+    [meshx,meshy,meshz]=ndgrid(MNIdb.minX:MNIdb.voxX:MNIdb.maxX,MNIdb.minY:MNIdb.voxY:MNIdb.maxY,MNIdb.minZ:MNIdb.voxZ:MNIdb.maxZ);
+    rivets.MNIdb.coords = [meshx(:) meshy(:) meshz(:)];
     
-    rivets.TalDB = load('talairachDB');
+    %rivets.TalDB = load('talairachDB');
 end

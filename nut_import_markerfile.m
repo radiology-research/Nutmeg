@@ -2,7 +2,7 @@ function varargout = nut_import_markerfile(varargin)
 % NUT_IMPORT_MARKERFILE imports CTF MarkerFiles via GUI interface.
 %    Is called by nutmeg GUI.
 
-% Last Modified by GUIDE v2.5 14-May-2007 15:29:52
+% Last Modified by GUIDE v2.5 23-Jan-2023 16:25:48
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -278,5 +278,3 @@ function text_classtime_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-

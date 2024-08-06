@@ -204,13 +204,13 @@ params.active = active;
 params.control = control;
 params.band = [lowfreq hifreq];
 params.session = sessionfile;
-for kk=1:size(R,3) % Johanna uses this mineig for inverse regularization
-    % FIXME: in future, use 2nd output of nut_cov rather than recompute mineig here
-    % keeping mineig for consistency, allowing multi-window control with win length = active.
+for kk=1:size(R,3) % (Johanna) mineig for inverse regularization (if necessary) in nut_inv.m
+    % FIXME: make possible in a dual state multi-marker situation, or don't create
+    % params.mineig (see nut_inv.m Line 74 for downstream issues)
     if ~isempty(Rcon)
-    	if length(size(Rcon))==3 && size(Rcon,3)==size(R,3) 
+        if length(size(Rcon))==3 && size(Rcon,3)==size(R,3)
             params.mineig(kk)=min(eig([R(:,:,kk)+Rcon(:,:,kk)]/2));
-        elseif length(size(Rcon))==3 && size(Rcon,3)~=size(R,3) 
+        elseif length(size(Rcon))==3 && size(Rcon,3)~=size(R,3)
             warning('Active and Control R do not have the same number of timepoints.');
             warning('Mineig inverse regularization fails, not creating params.mineig');
         else
