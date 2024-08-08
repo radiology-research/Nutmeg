@@ -22,7 +22,6 @@ if partial
     warning('on','MATLAB:load:variableNotFound');
 else
     nuts=load(savedfile, '-regexp','^(?!fig)...');
-    nuts.Lp=load(savedfile,'Lp');
 end
 if isfield(nuts,'nuts')
     nuts=nuts.nuts;
