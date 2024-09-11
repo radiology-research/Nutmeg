@@ -131,7 +131,8 @@ end
 tic
 %LF = double(LF); %CN 08/2014 change precision
 
-[gamma,s_bar,w]=awsm_champ(ypost,LF,Sigma_e,iters,lf,vcs,1);
+% changed plot_on from on to off (1 to 0)
+[gamma,s_bar,w]=awsm_champ(ypost,LF,Sigma_e,iters,lf,vcs,0);
 
 numtrials=length(numtrials);
 t=time(t3:t4);

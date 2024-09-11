@@ -194,12 +194,12 @@ for iem=1:nem;
 %    like(iem)=-.5*(sum(log(d))+nk*log(2*pi))-.5*sum(sum(y.*(invc*y)))/nt;
     like(iem)=-.5*(sum(log(max(d,eps1)))+nk*log(2*pi))-.5*sum(sum(invc.*cyy));  
     
-    if(plot_on)
-    subplot(2,2,1);plot((1:iem),like(1:iem));
-    title(['Likelihood: ' int2str(iem) ' / ' int2str(nem)]);
-    xlabel('iteration');
-    set(gca(),'XLim',[0 iem]);
-    end
+    % if(plot_on)
+    % subplot(2,2,1);plot((1:iem),like(1:iem));
+    % title(['Likelihood: ' int2str(iem) ' / ' int2str(nem)]);
+    % xlabel('iteration');
+    % set(gca(),'XLim',[0 iem]);
+    % end
     fc=f'*invc;
     w=vmat*fc;
 %    x=w*y;
