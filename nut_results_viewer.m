@@ -109,7 +109,8 @@ else
     error('NUT_RESULTS_VIEWER: Invalid filename.')
 end
 set(hObject,'Name',['NUTMEG Results Viewer - ' rivets.beamfilename]);
-
+%%% Temporary fix for loading TalDB
+rivets.TalDB = load('talairachDB');
 %%% Legacy compatibility %%%
 beam=nut_beam_legacy_compatibility(beam);
 if ~isfield(beam,'s')
@@ -939,9 +940,21 @@ global rivets st beam corrs;
 spm_image('init',beam.coreg.mripath); % reload structural MRI;
 spm_figure('ColorMap','gray'); % reset original colormap
 if(isfield(corrs,'fig') && ishandle(corrs.fig)), delete(corrs.fig), end
-clear global beam rivets corrs
+clear global beam corrs
+conserve_rivets
 delete(hObject);
 
+%% ----------------------------------------------
+function conserve_rivets(hObject, eventdata,handles)
+% prevent deltion of MNI
+global rivets
+rivets2.MNIdb=rivets.MNIdb
+rivets2.sliderenable=rivets.sliderenable
+rivets2.spm_refresh_handle=rivets.spm_refresh_handle
+rivets2.TalDB=rivets.TalDB
+clear global rivets
+global rivets
+rivets=rivets2
 
 %%------------------------------------------
 function nut_ERP_Overlay_button_Callback(hObject, eventdata, handles)

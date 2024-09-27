@@ -1047,7 +1047,7 @@ case 'corr_snpm'
         perm=[perm,-find(all((meshgrid(iCond,1:size(SP.PiCond,1))==-SP.PiCond)'))];
     end
     if length(perm)==1
-        if (perm<0), SP.PiCond=-SP.PiCond; perm=-perm; end
+        if (perm<0), SP.PiCond=-SP.P; iCond; perm=-perm; end
         %-Actual labelling must be at top of PiCond
         if (perm~=1)
             SP.PiCond(perm,:)=[];
