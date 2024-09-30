@@ -16,6 +16,11 @@ if isfolder('/netopt/share/bin/local/bil/')==1   % test that you are on the UCSF
     addpath(genpath('/data/research_meg/rendering_tools'))
     addpath(genpath('/netopt/share/lib/local/bil/matlab/Nutmeg-Next/'))
     addpath(genpath('/netopt/share/lib/local/bil/matlab/Nutmeg-Next/DSSP/'))
+    addpath('/data/research_meg11/ccai/DSSP_Champ_ctf/ctf_fieldtrip');
+    addpath('/data/research_meg11/ccai/DSSP_Champ_ctf/DSSP_new');
+    addpath('/data/research_meg11/ccai/DSSP_Champ_ctf/ctf_code');
+    addpath('/data/research_meg11/ccai/DSSP_Champ_ctf');
+    addpath(genpath('/data/research_meg10/ccai/ccai/public_data/fieldtrip/fieldtrip-20160222'));
 else
     disp('make sure your path to nutmeg is added before running this function')
 end
