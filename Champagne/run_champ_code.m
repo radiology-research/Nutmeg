@@ -145,20 +145,20 @@ nt=size(s_bar,2);
 
 ialp=squeeze(gamma(1,1,1:nv)+gamma(2,2,1:nv));
 
-s1=s_bar(1:lf:end,:);
+s1=real(s_bar(1:lf:end,:));
 s11=s1(1:nv,:);
 s111=reshape(s11,[nv nt/numtrials numtrials]);
 pw1=sum(sum(s111(:,pow_t,1:tr).^2,3),2)./(length(pow_t)*tr);
 s1mean=mean(s111,3);
 
-s2=s_bar(2:lf:end,:);
+s2=real(s_bar(2:lf:end,:));
 s22=s2(1:nv,:);
 s222=reshape(s22,[nv nt/numtrials numtrials]);
 pw2=sum(sum(s222(:,pow_t,1:tr).^2,3),2)./(length(pow_t)*tr);
 s2mean=mean(s222,3);
 
 if(lf==3)
- s3=s_bar(3:lf:end,:);
+ s3=real(s_bar(3:lf:end,:));
 s33=s2(1:nv,:);
 s333=reshape(s33,[nv nt/numtrials numtrials]);
 pw3=sum(sum(s333(:,pow_t,1:tr).^2,3),2)./(length(pow_t)*tr);
@@ -191,7 +191,7 @@ sa{1}=ialp;
 
 save(['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_hyper.mat'],'sa','coreg','srate','timepts','voxels','voxelsize','bands')
 
-sa{1}=pow;
+sa{1}=real(pow);
 
 save(['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_power.mat'],'sa','coreg','srate','timepts','voxels','voxelsize','bands')
 
