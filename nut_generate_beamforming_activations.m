@@ -84,7 +84,7 @@ switch algorithm
     case {'sLORETA','swLORETA','dSPM','MinNorm','MinNorm_Scalar','TRACS Beamformer'}
         bolts.flags.cn=1; warning('enforcing lead-field normalization for this inverse method');
         bolts.flags.wn=0; warning('enforcing no weights normalization for this inverse method');
-    case {'Beamspace noES','LCMV Vector Beamformer','Eigenspace Vector Beamformer','Beamspace','Point Suppression','Saketini','NSEFALoc','Correlate Columns','BF LFerror','BF LFerror vector','BFprior','Champagne','SAM2 Beamformer','Amber'}
+    case {'Beamspace noES','LCMV Vector Beamformer','Eigenspace Vector Beamformer','Beamspace','Point Suppression','Saketini','NSEFALoc','Correlate Columns','BF LFerror','BF LFerror vector','BFprior','Champagne','Awsmchamp','SAM2 Beamformer','Amber'}
         % enforce no lead-field column normalization
         bolts.flags.cn = 0; warning('enforcing no lead-field normalization for this inverse method');
     otherwise
@@ -112,7 +112,7 @@ switch algorithm
     case {'Saketini','NSEFALoc','Correlate Columns','BF LFerror','BF LFerror Vector'}
         data.y=mean(bolts.meg,3);
         data.latency=bolts.latency;
-    case {'Champagne','Amber'}
+    case {'Champagne','Amber','Awsmchamp'}
         m=max(max(max(abs(Lp))));ms=num2str(m);mm=['1' ms(end-3:end)];mn=str2num(mm);
         Lp=Lp*(1/mn); % mn is generic rescaling of order/magnitude of Lp
 %         Lp=Lp*10^round(-log10(max(abs(nuts.Lp(:))))); % bring to order 1
@@ -346,7 +346,7 @@ if isstruct(W1)  %happens in saketini, tbf1/1a, etc.
             end
         case {'nut_Correlate_Columns'}
             bolts.meg=beamout.meg;
-        case {'nut_Champagne'}
+        case {'nut_Champagne','nut_Awsmchamp'}
             nut_save_hyperparam(beamout, outname, beam)
         otherwise
             error('why is your weight a structure?')
@@ -383,7 +383,7 @@ if(savefullvolume)
         finaldata=bolts.evoked(time_ndx,:)';
 %        finaldata=mean(bolts.meg(time_ndx,:,:),3)';
     end
-    if strcmp(algorithm,'nut_Champagne')
+    if strcmp(algorithm,'nut_Champagne')|strcmp(algorithm,'nut_Awsmchamp')
        %already saved with nut_save_hyperparam earlier
     elseif(ndims(W1)==2) % for compatibility with orientation-optimized weights
 %         beam.sa{1} = W1'*finaldata;
