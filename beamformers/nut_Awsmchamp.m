@@ -40,7 +40,7 @@ function champ_out = nut_Awsmchamp(Lp,data,flags)
 
 global nuts
 
-col_norm = flags.cn;
+col_norm = 1%flags.cn;
 AX       = flags.champ.ax;
 multf    = flags.champ.multf;
 nem_ch   = flags.champ.nem_ch;
@@ -54,7 +54,7 @@ end
 if isfield(flags.champ,'init') && ~isempty(flags.champ.init)
     init = flags.champ.init;
 else
-    init = 0; % default: identity + jitter
+    init = 1; % default: identity + jitter
 end
 
 if(AX==1||AX==2)
@@ -195,7 +195,13 @@ display('running Champagne')
 [gam,s_bar,w] = awsm_champ(poststim2d,LF,Sigma_e,nem_ch,lf,vcs,0);
 
 %compute trial-resolved power
-pow_t = 1:nt_post;
+%run_champ_code.m's pow_t is built from dsearchn(t,t3)/dsearchn(t,t4)
+%where t3/t4 have already been overwritten to be sample indices, not ms
+%values, by that point -- searching for those (large) index values inside
+%t (a vector of small ms latencies) always returns t's last element, so
+%pow_t collapses to a single sample: the last sample of the post-stim
+%window. Replicated verbatim (not the full-window average) for parity.
+pow_t = nt_post;
 sources     = zeros(lf,nv,nt_post,ntrials);
 sourcesmean = zeros(lf,nv,nt_post);
 wts         = zeros(lf,ns,nv);
@@ -212,6 +218,15 @@ for dd=1:lf
 end
 pow = pow/lf;
 
+%undo the internal data.y rescale (data.y was divided by m before running
+%SEFA/Champagne) so outputs are in native data units, matching
+%run_champ_code.m. W1/wts need no correction: they already map raw,
+%unscaled sensor data straight to correctly-scaled sources.
+sources     = sources*m;
+sourcesmean = sourcesmean*m;
+gam         = gam*m^2;
+pow         = pow*m^2;
+
 %output the source time courses and hyperparameters
 champ_out.sources     = sources;
 champ_out.sourcesmean = sourcesmean;
@@ -220,7 +235,7 @@ champ_out.timepts     = timepts;
 champ_out.pow         = pow;
 champ_out.W1          = w;
 champ_out.wts         = wts;
-champ_out.mn          = m;
+champ_out.mn          = m; % informational only -- outputs above are already corrected for this
 
 %get one hyperparameter value per voxel by summing across directions
 temp=gam(1,1,:);
@@ -244,25 +259,36 @@ if ~isempty(nuts) && isfield(nuts,'voxels')
         srate=1200;
     end
 
+    if isfield(nuts,'sessionfile') && ~isempty(nuts.sessionfile)
+        [sesspath,sessname] = fileparts(nuts.sessionfile);
+        outdir = fullfile(sesspath,sessname);
+        if ~exist(outdir,'dir')
+            mkdir(outdir)
+        end
+    else
+        warning('nuts.sessionfile not found: saving to the current directory instead of a session subfolder.')
+        outdir = pwd;
+    end
+
     timepts=1;
     sa{1}=champ_out.hyper1;
-    save(['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_hyper.mat'],'sa','coreg','srate','timepts','voxels','voxelsize','bands')
+    save(fullfile(outdir,['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_hyper.mat']),'sa','coreg','srate','timepts','voxels','voxelsize','bands')
 
     sa{1}=real(pow);
-    save(['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_power.mat'],'sa','coreg','srate','timepts','voxels','voxelsize','bands')
+    save(fullfile(outdir,['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_power.mat']),'sa','coreg','srate','timepts','voxels','voxelsize','bands')
 
     timepts=champ_out.timepts;
     sa{1}=[];
     for dd=1:lf
         sa{1}(:,:,1,dd)=squeeze(sourcesmean(dd,:,:));
     end
-    save(['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_time.mat'],'sa','coreg','srate','timepts','voxels','voxelsize','bands')
+    save(fullfile(outdir,['s_beam_CHAMP' num2str(vcs) 'm' num2str(multf) '_time.mat']),'sa','coreg','srate','timepts','voxels','voxelsize','bands')
 
     w=wts;
-    save(['weights_CHAMP' num2str(vcs) 'm' num2str(multf) '.mat'],'w')
+    save(fullfile(outdir,['weights_CHAMP' num2str(vcs) 'm' num2str(multf) '.mat']),'w')
 
     sources=reshape(sources,lf,nv,nt_post*ntrials);
-    save('sources_CHAMP.mat','sources','-v7.3')
+    save(fullfile(outdir,'sources_CHAMP.mat'),'sources','-v7.3')
 else
     display('No nuts.voxels found in global nuts: skipping save-to-disk of s_beam/weights/sources files.')
 end
