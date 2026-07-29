@@ -114,7 +114,7 @@ switch algorithm
         data.latency=bolts.latency;
     case {'Champagne','Amber','Awsmchamp'}
         m=max(max(max(abs(Lp))));ms=num2str(m);mm=['1' ms(end-3:end)];mn=str2num(mm);
-        Lp=Lp*(1/mn); % mn is generic rescaling of order/magnitude of Lp
+        %Lp=Lp*(1/mn); % mn is generic rescaling of order/magnitude of Lp
 %         Lp=Lp*10^round(-log10(max(abs(nuts.Lp(:))))); % bring to order 1
 %         Lp=Lp*10^floor(-log10(max(abs(nuts.Lp(:))))); % bring to order 1
         data.y=mean(bolts.meg,3);
