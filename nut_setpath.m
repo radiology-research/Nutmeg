@@ -32,8 +32,13 @@ newpath = {
     [NUT_BASE filesep 'beamformers'];
     [NUT_BASE filesep 'data_importers'];
     [NUT_BASE filesep 'denoisers'];
+    [NUT_BASE filesep 'DSSP'];
     [NUT_BASE filesep 'examples'];
     [NUT_BASE filesep 'external'];
+    [NUT_BASE filesep 'Champagne'];
+    [NUT_BASE filesep 'denoisers'];
+    [NUT_BASE filesep 'Langlat2012'];
+    [NUT_BASE filesep 'verbgen_languagelat'];
     [NUT_BASE filesep 'external' filesep 'ctf'];
     [NUT_BASE filesep 'external' filesep 'openmeeg'];
     [NUT_BASE filesep 'fcm'];
@@ -41,6 +46,7 @@ newpath = {
     [NUT_BASE filesep 'fcm' filesep 'src'];
     [NUT_BASE filesep 'leadfield_obtainers'];
     [NUT_BASE filesep 'mesh'];
+    [NUT_BASE filesep 'm_bar'];
     [NUT_BASE filesep 'nuteeg'];
     [NUT_BASE filesep 'nuteeg' filesep 'util'];
     [NUT_BASE filesep 'nuteeg' filesep 'util' filesep 'Sphere_Tessellation'];
