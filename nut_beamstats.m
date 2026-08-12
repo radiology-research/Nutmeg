@@ -684,6 +684,18 @@ case {'snpm','ttest1_snpm'}
         rand_tmp=randperm(length(tmp));
         tmp=tmp(rand_tmp);
         SP.PiCond = 2*rem(floor(tmp(:)*pow2(-(stats.numsubj-1):0)),2)-1;
+        if ~any(all(SP.PiCond==iCond,2))
+            SP.PiCond = [iCond; SP.PiCond];
+            % If we now exceed the requested number of permutations, truncate
+            if size(SP.PiCond,1) > SP.numperm
+                SP.PiCond = SP.PiCond(1:SP.numperm,:);
+            end
+        else
+            r = find(all(SP.PiCond==iCond,2),1);
+            if r ~= 1
+                SP.PiCond([1 r],:) = SP.PiCond([r 1],:);
+            end
+        end
     end
     clear tmp d rand_tmp i
 
