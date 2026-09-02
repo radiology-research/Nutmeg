@@ -80,6 +80,7 @@ vvec=inu0*ones(nvd,1);
 % Learn voxel variances
 if(plot_on)
 figure;
+set(gcf,'AutoResizeChildren','off');
 end
 
 like=zeros(nem,1);
