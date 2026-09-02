@@ -21,7 +21,8 @@ if partial
     nuts=load(savedfile,'coreg','voxels','voxelsize','Lp','voxor');
     warning('on','MATLAB:load:variableNotFound');
 else
-    nuts=load(savedfile);
+    nuts=load(savedfile, '-regexp','^(?!fig)...');
+    nuts.Lp=load(savedfile,'Lp');
 end
 if isfield(nuts,'nuts')
     nuts=nuts.nuts;
@@ -46,7 +47,8 @@ if (isfield(nuts,'coreg') && isfield(nuts.coreg,'mripath') && exist(nuts.coreg.m
 end
 
 if isgui
-    nut_refresh_image;  % load image into SPM
     nut_enabler;
+    nut_refresh_image;  % load image into SPM
+
     % nut_defaults;
 end

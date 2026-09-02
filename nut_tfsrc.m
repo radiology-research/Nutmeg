@@ -94,7 +94,45 @@ if isfield(nuts,'voxor')        % Surface normal voxel orientations
     nuts.Lp=L; clear L
 end
 
+%% Champange SAM
+if strmatch(algo,'ChampSAM','exact')
+    
+    f = nuts.Lp;
+    [fc fd fv]=size(f);
+    f =  reshape(f,fc,fd*fv);
+    
+    for i=1:fd*fv
+        f(:,i) = f(:,i)./norm(f(:,i));
+    end
+    %Ract = Ract./norm(Ract);
+    % Add in user input popup for VCS selection
+    [gamma,x,w,Ract]=noinv_awsm_champ_noiseup(Ract,f,100,fd,0,0,0,1);
+    
+    %Rcon =Rcon./norm(Rcon);
+    [gamma,x,w,Rcon]=noinv_awsm_champ_noiseup(Rcon,f,100,fd,0,0,0,1);
+    
+end
 switch strtok(algo,'_')
+        case 'Champagne'
+        if params.dualstate
+            Rall = (Ract + Rcon)/2;
+        else
+            Rall = Ract;
+        end
+        W = nut_TF_invsol(nuts.Lp,Rall,[],params,algo);
+        
+        %%  champange+Sam
+    case 'ChampSAM'
+        %         beam.params.cn = 0 % REMEMBER TO REMOVE THIS*************
+        if params.dualstate
+            Rall = (Ract + Rcon)/2;
+        else
+            Rall = Ract;
+        end
+        condRall = cond(Rall)
+        condRact = cond(Ract)
+        condRcon = cond(Rcon)
+        W = nut_TF_invsol(nuts.Lp,Rall,[],params,algo);
     case 'SAM'
 %         beam.params.cn = 0 % REMEMBER TO REMOVE THIS*************
         if params.dualstate
@@ -166,6 +204,45 @@ end
 
 if params.savepower
    switch strtok(algo,'_')
+              %% champagne
+        case 'Champagne'
+            Sact = sum(W.*(Ract*W))';
+            if params.dualstate
+                Scon = sum(W.*(Rcon*W))';
+            else
+                Scon = ones(size(Sact));     % fill with 1's for single state beamformer
+            end
+            
+            if params.dualstate
+                Rall = (Ract + Rcon)/2;
+            else
+                Rall = Ract;
+            end
+            [u,s,v]=svd(Rall);
+            sig=s(end,end);
+            noise = sum(W.*(sig*W))';
+            
+            beam.params.beamformertype='Champ-timef';
+            
+            %%  champagne sam
+        case 'ChampSAM'
+            Sact = sum(W.*(Ract*W))';
+            if params.dualstate
+                Scon = sum(W.*(Rcon*W))';
+            else
+                Scon = ones(size(Sact));     % fill with 1's for single state beamformer
+            end
+            
+            if params.dualstate
+                Rall = (Ract + Rcon)/2;
+            else
+                Rall = Ract;
+            end
+            [u,s,v]=svd(Rall);
+            sig=s(end,end);
+            noise = sum(W.*(sig*W))';
+            
+            beam.params.beamformertype='Champ-SAM-timef';
        case 'SAM'
             Sact = sum(W.*(Ract*W))';
             if params.dualstate
@@ -253,6 +330,41 @@ function [W,Wcon] = nut_TF_invsol(Lp,Ract,Rcon,params,algo)
 % if ~isfield(params,'calceta'), params.calceta=false; end
 
 switch strtok(algo,'_')
+        %% champagne
+    case 'Champagne'
+        
+        data.InvRyy = nut_inv(Ract,params.regularization,params.regulthres,[],params.mineig);
+        
+        flags.LCMVcn = params.cn;
+        flags.wn = params.wn;
+        %flags.dualstate = params.dualstate;
+        flags.progressbar=false;
+        flags
+        
+        
+        %W = feval(['nut_' algo '_Beamformer'],Lp,data, flags);
+        
+        
+        
+        W = feval(['Scalar_' algo '_noise_learning'],Lp,data, flags);
+        
+        
+        
+    case 'ChampSAM'
+        
+        data.InvRyy = nut_inv(Ract,params.regularization,params.regulthres,[],params.mineig);
+        
+        flags.LCMVcn = params.cn;
+        flags.wn = params.wn;
+        %flags.dualstate = params.dualstate;
+        flags.progressbar=false;
+        flags
+        
+        if size(Lp,2)==1, algo='LCMV_Vector';   % if we already have a scalar leadfield, we do not need the scalar beamformer
+        else algo='LCMV_Scalar';
+        end
+        
+        W = feval(['nut_' algo '_Beamformer'],Lp,data, flags);
     case 'SAM'
         
         data.InvRyy = nut_inv(Ract,params.regularization,params.regulthres,[],params.mineig);

@@ -83,6 +83,6 @@ end
 % set MEG dataset name
 if(isfield(nuts,'meg'))
     if(isfield(nuts.meg,'filename'))
-        set(handles.nut_megfile,'String',nuts.meg.filename);
+        set(handles.nut_megfile,'Text',nuts.meg.filename);
     end
 end

@@ -2,8 +2,8 @@ function sccohere1(filtfile,wfile,chfile,n,stp,ftype,lofrq,hifrq,nfft,varargin)
 %SCCOHERE1  Calculates source complex coherency for continuous single-trial data.  
 %
 % sccohere1(filtfile,weightfile,connections,len,overlap,ftype,lofrq,hifrq, ...
-%        nfft,¦options¦)
-%             (parameters in ¦¦ are optional)
+%        nfft,ï¿½optionsï¿½)
+%             (parameters in ï¿½ï¿½ are optional)
 % 
 % Input:
 %  filtfile     file containing filtered sensor data (filtdata_*.mat).
@@ -224,7 +224,7 @@ catch ME
 end    
 index = 1:ns;
 for k=1:nbt
-    tmp = fft(wdw .* repmat(detrend(meg.data(index,:)),[1 1 numtaper]), nfft, 1); 
+    tmp = fft(wdw .* repmat(detrend(meg.data(index,:,:)),[1 1 numtaper]), nfft, 1); 
     FF(:,:,:,k) = tmp(select,:,:);
     index = index + stp; 
 end

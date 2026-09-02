@@ -684,6 +684,18 @@ case {'snpm','ttest1_snpm'}
         rand_tmp=randperm(length(tmp));
         tmp=tmp(rand_tmp);
         SP.PiCond = 2*rem(floor(tmp(:)*pow2(-(stats.numsubj-1):0)),2)-1;
+        if ~any(all(SP.PiCond==iCond,2))
+            SP.PiCond = [iCond; SP.PiCond];
+            % If we now exceed the requested number of permutations, truncate
+            if size(SP.PiCond,1) > SP.numperm
+                SP.PiCond = SP.PiCond(1:SP.numperm,:);
+            end
+        else
+            r = find(all(SP.PiCond==iCond,2),1);
+            if r ~= 1
+                SP.PiCond([1 r],:) = SP.PiCond([r 1],:);
+            end
+        end
     end
     clear tmp d rand_tmp i
 
@@ -1047,7 +1059,7 @@ case 'corr_snpm'
         perm=[perm,-find(all((meshgrid(iCond,1:size(SP.PiCond,1))==-SP.PiCond)'))];
     end
     if length(perm)==1
-        if (perm<0), SP.PiCond=-SP.PiCond; perm=-perm; end
+        if (perm<0), SP.PiCond=-SP.P; iCond; perm=-perm; end
         %-Actual labelling must be at top of PiCond
         if (perm~=1)
             SP.PiCond(perm,:)=[];

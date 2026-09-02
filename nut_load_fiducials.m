@@ -8,7 +8,7 @@ function nut_load_fiducials(fullpath_lsc,V)
 %               from calling V=spm_vol(mripath); However, if Nutmeg open
 %               then this will be in global st (st.vols{1})
 
-global st nuts
+global st nuts coreg
 
 if exist('V','var')
     st.vols{1}=V;

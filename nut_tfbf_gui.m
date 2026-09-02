@@ -708,6 +708,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+set(hObject,'String',[get(hObject,'String'); {'Champagne'; 'ChampSAM'}]);
+
 % --- Executes on selection change in list_output.
 function list_output_Callback(hObject, eventdata, handles)
 % hObject    handle to list_output (see GCBO)

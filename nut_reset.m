@@ -43,7 +43,7 @@ nuts.coreg.meg2mri_tfm = eye(4);
 nuts.fig = findobj('tag','nutmegfig');
 handles = guihandles(nuts.fig);
 
-set(handles.nut_megfile,'String','(none loaded)');
+set(handles.nut_megfile,'Text','(none loaded)');
 nut_enabler(handles);
 
 nut_refresh_image;

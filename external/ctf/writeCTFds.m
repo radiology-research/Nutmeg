@@ -86,7 +86,6 @@ function ds=writeCTFds(datasetname,ds,data,unit);
 
 persistent printWarning bandwidthMessage
 delim=filesep;
-
 if nargin==0 & nargout==0  %  Print a version number
   fprintf(['\twriteCTFds: Version 1.3   5 October 2007   ',...
       'Creates v4.1 and v4.2 CTF data sets.\n',...
@@ -182,7 +181,7 @@ clear ksep kdot;
 %  Save the name already in structure ds, and change to the new datset name.
 if isfield(ds,'baseName')
   olddatasetname=[ds.baseName,'.ds'];
-  if isfield(ds.path)
+  if isfield(ds,'path') && ~isempty(ds.path)
     olddatasetname=[ds.path,olddatasetname];
   end
 else
@@ -211,8 +210,8 @@ end
 %  Sensor type indices : SQUIDs (0:7), ADCs (10), DACs(14), Clock (17), HLC (13,28,29)
 %  See Document CTF MEG File Formats (PN 900-0088), RES4 File Format/
 for index=[0:7 10 13 14 17 28 29]
-  for k=find([ds.res4.senres.sensorTypeIndex]==index);
-    if isempty(strfind(ds.res4.chanNames(k,:),'-'))
+  for k=find([ds.res4.senres.sensorTypeIndex]==index)
+    if ~contains(ds.res4.chanNames(k,:),'-')
       fprintf(['writeCTFds: Channel %3d  %s     No sensor-file identification.',...
           ' (''-xxxx'' appended to channel name).\n',...
           '\t\tSome CTF software may not work with these channel names.\n'],...
@@ -220,7 +219,11 @@ for index=[0:7 10 13 14 17 28 29]
       break;
     end
   end
-  if isempty(strfind(ds.res4.chanNames(k,:),'-'));break;end
+  if isempty(k) 
+            break;
+  elseif ~contains(ds.res4.chanNames(k,:),'-')
+      break;
+  end
 end
 clear index k chanName;
 
@@ -384,7 +387,7 @@ while pt<ndata
   else
     meg4Ext=['.',int2str(floor(pt/maxPtsPerFile)),'_meg4'];
   end
-  fidMeg4=fopen([path,baseName,'.ds\',baseName,meg4Ext],'w','ieee-be');
+  fidMeg4=fopen([path,baseName,'.ds',delim,baseName,meg4Ext],'w','ieee-be');
   fwrite(fidMeg4,[ds.meg4.header(1:7),char(0)],'uint8');
   while pt<endPt
     pt1=min(pt+meg4ChunkSize,endPt);                   %  Convert to double in case data is
@@ -428,8 +431,8 @@ ds=updateBandwidth(ds,fhp,flp);
 ds=updateDateTime(ds);
 
 %  Create the .res4 file in the output dataset.
-ds.res4=writeRes4([path,baseName,'.ds\',baseName,'.res4'],ds.res4,MAX_COILS);
 
+ds.res4=writeRes4([path,baseName,'.ds',delim,baseName,'.res4'],ds.res4,MAX_COILS);
 if ds.res4.numcoef<0
   fprintf('\nwriteCTFds: writeRes4 returned ds.res4.numcoef=%d (<0??)\n\n',...
     ds.res4.numcoef);
@@ -440,16 +443,16 @@ if ds.res4.numcoef<0
 end
 
 %  Create .hist file
-histfile=[path,baseName,'.ds\',baseName,'.hist'];
+histfile=[path,baseName,'.ds',delim,baseName,'.hist'];
 fid=fopen(histfile,'w');
 fwrite(fid,ds.hist,'char');
 fclose(fid);
 
 % New .newds file
 if isfield(ds,'newds')
-  fid=fopen([path,baseName,'.ds\',baseName,'.newds'],'w');
-  fwrite(fid,ds.newds,'char');
-  fclose(fid);
+    fid=fopen([path,baseName,'.ds',delim,baseName,'.newds'],'w');
+    fwrite(fid,ds.newds,'char');
+    fclose(fid);
 end
 
 %  New infods file.

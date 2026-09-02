@@ -6,7 +6,16 @@ global nuts screws
 handles = screws.coreg.handles;
 
 if isfield(nuts.coreg,'orientation')
-    set(handles.nut_orientation_menu,'Value',nuts.coreg.orientation);
+    if isnumeric(nuts.coreg.orientation)==0
+        if isequal(nuts.coreg.orientation,'Neurological (Left on Left)')
+            nval=1;
+        else
+            nval=2;
+        end
+    else 
+        nval=nuts.coreg.orientation
+    end
+    set(handles.nut_orientation_menu,'Value',nval);
 end
 
 % get handlenames of all buttons and menus, place in enableditems

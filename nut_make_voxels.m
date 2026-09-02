@@ -4,7 +4,7 @@ global nuts ndefaults
 
 voxelsize = [voxelsize voxelsize voxelsize];
 
-if( isfield(nuts,'voxels') && all(nuts.voxelsize==voxelsize) )
+if( isfield(nuts,'voxels') && all(nuts.voxelsize==voxelsize) && ~isfield(nuts,'VOIvoxels'))
        disp('Using existing nuts.voxels and nuts.voxelsize...');
      voxels = nuts.voxels;
     voxelsize = nuts.voxelsize;

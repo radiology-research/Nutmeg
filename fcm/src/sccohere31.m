@@ -3,8 +3,8 @@ function sccohere31(filtfile,wfile,chfile,ftype,lofrq,hifrq,nfft,varargin)
 %SCCOHERE31  Calculates source complex coherency for non-event-locked multi-trial data  
 %            in which each trial is an artifact-free segment of a contiuous signal.
 %
-%  sccohere31(filtfile,weightfile,connections,ftype,lofrq,hifrq,nfft,¦options¦)
-%                         (variables in ¦¦ are optional)
+%  sccohere31(filtfile,weightfile,connections,ftype,lofrq,hifrq,nfft,ï¿½optionsï¿½)
+%                         (variables in ï¿½ï¿½ are optional)
 % 
 % Input:
 %  filtfile     file containing filtered sensor data (filtdata_*.mat).
@@ -506,7 +506,7 @@ if useroi
 end
 
 if ~exist('ccohere','dir'), mkdir ccohere, end
-save(fullfile('ccohere',['CC' chfile(2:end)]),'CC')
+save(fullfile('ccohere',['CC' chfile(2:end)]),'CC','-v7.3')
 
 fprintf('Done (sccohere31).\n')
 tempus=toc;
